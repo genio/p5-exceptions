@@ -44,6 +44,12 @@ unexpectedly. Let's start with a simple example.
         return $int+1;
     }
 
+This will result in the following output:
+
+    $ perl increment.pl
+    0 plus 1 = 1
+    That's not an int! at foo.pl line 11.
+
 The first line prints `0 plus 1 = 1\n` as expected. The second line, however,
 dies in a way that we can't recover from which prevents the rest of our program
 from doing any further execution. So, we must handle our exceptions!
