@@ -22,7 +22,7 @@ This module was originally released in 1996, but it hasn't been installable or
 usable in any fashion since then. Many other alternatives have cropped up over
 the years to make exception handling much easier. If you want to skip the
 explanations below, then you should look directly at some of the modules that
-make exception handling dead-simple:
+make exception handling dead simple.
 
 L<Try::Tiny> - Catch exceptions in a familiar C<try> and C<catch> way. If you
 look no further, make use of this module!
@@ -143,7 +143,7 @@ Let's look at our previous simple application with error handling using C<eval>.
     }
 
 As you can see, it gets quite ugly and cumbersome to handle exceptions this way.
-Don't let that scare you away from Perl, though, keep reading and be happy!
+Don't let that scare you away from Perl, though. Keep reading and be happy!
 
 =head1 THE SOLUTION
 
