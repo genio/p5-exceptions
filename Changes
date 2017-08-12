@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.101     2017-08-12
     - Update to use @Starter revision 2
     - Include the LICENSE in the repo
     - Include Syntax::Keyword::Try
