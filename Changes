@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.102     2017-08-14
     - Update the eval-ed code to be somewhat more readable
     - Reorganized the writeup a bit to hopefully read more smoothly
 
