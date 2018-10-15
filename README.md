@@ -42,25 +42,29 @@ the _why_ of it all.
 An exception is what happens anytime your program's execution exits
 unexpectedly. Let's start with a simple example.
 
-    #!/usr/bin/env perl
-    use strict;
-    use warnings;
+```perl
+#!/usr/bin/env perl
+use strict;
+use warnings;
 
-    print "0 plus 1 = ", increment(0), "\n"; # 1
-    print "zero plus 1 = ", increment('zero'), "\n"; # Exception
-    print "0 plus 1 = ", increment(0), "\n"; # never executes
+print "0 plus 1 = ", increment(0), "\n"; # 1
+print "zero plus 1 = ", increment('zero'), "\n"; # Exception
+print "0 plus 1 = ", increment(0), "\n"; # never executes
 
-    sub increment {
-        my $int = shift;
-        die "That's not an int!" unless defined $int && $int =~ /^[0-9]+\z/;
-        return $int+1;
-    }
+sub increment {
+    my $int = shift;
+    die "That's not an int!" unless defined $int && $int =~ /^[0-9]+\z/;
+    return $int+1;
+}
+```
 
 This will result in the following output:
 
-    $ perl increment.pl
-    0 plus 1 = 1
-    That's not an int! at foo.pl line 11.
+```
+$ perl increment.pl
+0 plus 1 = 1
+That's not an int! at foo.pl line 11.
+```
 
 The first line prints `0 plus 1 = 1\n` as expected. The second line, however,
 dies in a way that we can't recover from which prevents the rest of our program
@@ -73,49 +77,50 @@ die in an `eval` block. This sounds simple enough, but there are some gotchas
 that lead many developers to do this incorrectly.
 
 The correct way to handle an exception requires that you understand how to
-preserve the global `$@` variable. Please see ["BACKGROUND" in Try::Tiny](https://metacpan.org/pod/Try::Tiny#BACKGROUND) for a
+preserve the global `$@` variable and that its value cannot be relied upon to
+determine whether an exception occurred. Please see ["BACKGROUND" in Try::Tiny](https://metacpan.org/pod/Try::Tiny#BACKGROUND) for a
 great explanation of this problem.
 
 Let's look at our previous simple application with error handling using `eval`.
 
-    #!/usr/bin/env perl
-    use strict;
-    use warnings;
+```perl
+#!/usr/bin/env perl
+use strict;
+use warnings;
 
-    # 1
-    my $value;
-    my $error = do { # catch block
-        local $@;
-        eval { $value = increment(0) }; # try
-        $@;
-    };
-    print "0 plus 1 = ", ($error ? "error": $value), "\n";
+# 1
+my $value;
+my $error;
+{ # catch block
+    local $@;
+    $error = $@ || 'Error' unless eval { $value = increment(0); 1 }; # try
+}
+print "0 plus 1 = ", (defined $error ? "error": $value), "\n";
 
-    # error
-    $value = undef;
-    $error = undef;
-    $error = do { # catch block
-        local $@;
-        eval { $value = increment('zero') }; # try
-        $@;
-    };
-    print "zero plus 1 = ", ($error ? "error": $value), "\n";
+# error
+$value = undef;
+$error = undef;
+{ # catch block
+    local $@;
+    $error = $@ || 'Error' unless eval { $value = increment('zero'); 1 }; # try
+}
+print "zero plus 1 = ", (defined $error ? "error": $value), "\n";
 
-    # 1
-    $value = undef;
-    $error = undef;
-    $error = do { # catch block
-        local $@;
-        eval { $value = increment(0) }; # try
-        $@;
-    };
-    print "0 plus 1 = ", ($error ? "error": $value), "\n";
+# 1
+$value = undef;
+$error = undef;
+{ # catch block
+    local $@;
+    $error = $@ || 'Error' unless eval { $value = increment(0); 1 }; # try
+}
+print "0 plus 1 = ", (defined $error ? "error": $value), "\n";
 
-    sub increment {
-        my $int = shift;
-        die "That's not an int!" unless defined $int && $int =~ /^[0-9]+\z/;
-        return $int+1;
-    }
+sub increment {
+    my $int = shift;
+    die "That's not an int!" unless defined $int && $int =~ /^[0-9]+\z/;
+    return $int+1;
+}
+```
 
 As you can see, it gets quite ugly and cumbersome to handle exceptions this way.
 Don't let that scare you away from Perl, though. Keep reading and be happy!
@@ -128,56 +133,60 @@ solutions to common tasks for us. One such solution is [Syntax::Keyword::Try](ht
 If you get nothing else out of this document, let it be that using
 [Syntax::Keyword::Try](https://metacpan.org/pod/Syntax::Keyword::Try) will save you time and heartache.
 
-    #!/usr/bin/env perl
-    use strict;
-    use warnings;
-    use Syntax::Keyword::Try;
-    # since 5.14 is required, let's use those features
-    use feature ':5.14';
+```perl
+#!/usr/bin/env perl
+use strict;
+use warnings;
+use Syntax::Keyword::Try;
+# since 5.14 is required, let's use those features
+use feature ':5.14';
 
-    # 1
-    try { say "0 plus 1 = ", increment(0); }
-    catch { say "0 plus 1 = error"; }
+# 1
+try { say "0 plus 1 = ", increment(0); }
+catch { say "0 plus 1 = error"; }
 
-    # error
-    try { say "zero plus 1 = ", increment('zero'); }
-    catch { say "zero plus 1 = error"; }
+# error
+try { say "zero plus 1 = ", increment('zero'); }
+catch { say "zero plus 1 = error"; }
 
-    # 1
-    try { say "0 plus 1 = ", increment(0); }
-    catch { say "0 plus 1 = error"; }
+# 1
+try { say "0 plus 1 = ", increment(0); }
+catch { say "0 plus 1 = error"; }
 
-    sub increment {
-        my $int = shift;
-        die "That's not an int!" unless defined $int && $int =~ /^[0-9]+\z/;
-        return $int+1;
-    }
+sub increment {
+    my $int = shift;
+    die "That's not an int!" unless defined $int && $int =~ /^[0-9]+\z/;
+    return $int+1;
+}
+```
 
 If you can't use [Syntax::Keyword::Try](https://metacpan.org/pod/Syntax::Keyword::Try), you can use the pure-Perl [Try::Tiny](https://metacpan.org/pod/Try::Tiny)
 instead:
 
-    #!/usr/bin/env perl
-    use strict;
-    use warnings;
-    use Try::Tiny qw(try catch);
+```perl
+#!/usr/bin/env perl
+use strict;
+use warnings;
+use Try::Tiny qw(try catch);
 
-    # 1
-    try { print "0 plus 1 = ", increment(0), "\n"; }
-    catch { print "0 plus 1 = error\n"; };
+# 1
+try { print "0 plus 1 = ", increment(0), "\n"; }
+catch { print "0 plus 1 = error\n"; };
 
-    # error
-    try { print "zero plus 1 = ", increment('zero'), "\n"; }
-    catch { print "zero plus 1 = error\n"; };
+# error
+try { print "zero plus 1 = ", increment('zero'), "\n"; }
+catch { print "zero plus 1 = error\n"; };
 
-    # 1
-    try { print "0 plus 1 = ", increment(0), "\n"; }
-    catch { print "0 plus 1 = error\n"; };
+# 1
+try { print "0 plus 1 = ", increment(0), "\n"; }
+catch { print "0 plus 1 = error\n"; };
 
-    sub increment {
-        my $int = shift;
-        die "That's not an int!" unless defined $int && $int =~ /^[0-9]+\z/;
-        return $int+1;
-    }
+sub increment {
+    my $int = shift;
+    die "That's not an int!" unless defined $int && $int =~ /^[0-9]+\z/;
+    return $int+1;
+}
+```
 
 # AUTHOR
 

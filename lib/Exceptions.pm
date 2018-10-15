@@ -1,5 +1,7 @@
 package Exceptions;
 
+our $VERSION = '0.103';
+
 use strict;
 use warnings;
 

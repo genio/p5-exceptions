@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+    - Show the correct way to test eval success. (Dan Book)
+    - Add explanation for not relying on value of $@ (Dan Book)
 
 0.102     2017-08-14
     - Update the eval-ed code to be somewhat more readable
