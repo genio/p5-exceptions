@@ -95,7 +95,8 @@ die in an C<eval> block. This sounds simple enough, but there are some gotchas
 that lead many developers to do this incorrectly.
 
 The correct way to handle an exception requires that you understand how to
-preserve the global C<$@> variable. Please see L<Try::Tiny/BACKGROUND> for a
+preserve the global C<$@> variable and that its value cannot be relied upon to
+determine whether an exception occurred. Please see L<Try::Tiny/BACKGROUND> for a
 great explanation of this problem.
 
 Let's look at our previous simple application with error handling using C<eval>.
