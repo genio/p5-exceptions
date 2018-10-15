@@ -71,15 +71,15 @@
    "provides" : {
       "Exception" : {
          "file" : "lib/Exception.pm",
-         "version" : "0.103"
+         "version" : "0.104"
       },
       "Exceptions" : {
          "file" : "lib/Exceptions.pm",
-         "version" : "0.103"
+         "version" : "0.104"
       },
       "SimpleException" : {
          "file" : "lib/SimpleException.pm",
-         "version" : "0.103"
+         "version" : "0.104"
       }
    },
    "release_status" : "stable",
@@ -94,7 +94,7 @@
          "web" : "https://github.com/genio/p5-exceptions"
       }
    },
-   "version" : "0.103",
+   "version" : "0.104",
    "x_Dist_Zilla" : {
       "perl" : {
          "version" : "5.028000"
@@ -426,7 +426,7 @@
                   "branch" : null,
                   "changelog" : "Changes",
                   "signed" : 0,
-                  "tag" : "v0.103",
+                  "tag" : "v0.104",
                   "tag_format" : "v%v",
                   "tag_message" : "v%v"
                },
