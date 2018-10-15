@@ -129,7 +129,7 @@ Let's look at our previous simple application with error handling using C<eval>.
         local $@;
         $error = $@ || 'Error' unless eval { $value = increment(0); 1 }; # try
     }
-    print "0 plus 1 = ", ($error ? "error": $value), "\n";
+    print "0 plus 1 = ", (defined $error ? "error": $value), "\n";
 
     sub increment {
         my $int = shift;
