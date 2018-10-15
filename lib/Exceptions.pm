@@ -106,30 +106,28 @@ Let's look at our previous simple application with error handling using C<eval>.
 
     # 1
     my $value;
-    my $error = do { # catch block
+    my $error;
+    { # catch block
         local $@;
-        eval { $value = increment(0) }; # try
-        $@;
-    };
-    print "0 plus 1 = ", ($error ? "error": $value), "\n";
+        $error = $@ || 'Error' unless eval { $value = increment(0); 1 }; # try
+    }
+    print "0 plus 1 = ", (defined $error ? "error": $value), "\n";
 
     # error
     $value = undef;
     $error = undef;
-    $error = do { # catch block
+    { # catch block
         local $@;
-        eval { $value = increment('zero') }; # try
-        $@;
+        $error = $@ || 'Error' unless eval { $value = increment('zero'); 1 }; # try
     };
-    print "zero plus 1 = ", ($error ? "error": $value), "\n";
+    print "zero plus 1 = ", (defined $error ? "error": $value), "\n";
 
     # 1
     $value = undef;
     $error = undef;
-    $error = do { # catch block
+    { # catch block
         local $@;
-        eval { $value = increment(0) }; # try
-        $@;
+        $error = $@ || 'Error' unless eval { $value = increment(0); 1 }; # try
     };
     print "0 plus 1 = ", ($error ? "error": $value), "\n";
 
