@@ -45,15 +45,18 @@ re-throw exceptions when they're something that should be handled elsewhere.
 
 =item *
 
-L<Throwable> and L<Throwable::SugarFactory>
+L<Throwable::Error>
 
-=item *
-
-L<Exception::Class>
+L<Throwable> and L<Throwable::SugarFactory> will likely make using
+L<Throwable::Error> a better experience for you.
 
 =item *
 
 L<Mojo::Exception>
+
+=item *
+
+L<Exception::Class>
 
 =back
 
